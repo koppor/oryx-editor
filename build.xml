@@ -41,6 +41,7 @@
     
     <target name="undeploy-editor">
         <delete file="${deploymentdir}/oryx.war"/>
+		<delete dir="${deploymentdir}/oryx"/>
     </target>
     
     <target name="deploy-stencilsets">
@@ -60,6 +61,7 @@
     
     <target name="undeploy-backend">
         <delete file="${deploymentdir}/backend.war"/>
+		<delete dir="${deploymentdir}/backend"/>
     </target>
 
     <!-- Generate dependency graph of Ant tasks using Grand
@@ -110,4 +112,20 @@
             <srcfiles file="stick/build.xml" />
         </uptodate>
     </target>
+			<target name="tomcat-start">
+            <java jar="C:\Programme\Apache Software Foundation\Tomcat 6.0\bin\bootstrap.jar" fork="true">
+                <jvmarg value="-Dcatalina.home=C:\Programme\Apache Software Foundation\Tomcat 6.0"/>
+                <jvmarg value="-Xdebug"/>
+                <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>
+            </java>
+        </target>
+        
+        <target name="tomcat-stop">
+            <java jar="C:\Programme\Apache Software Foundation\Tomcat 6.0\bin\bootstrap.jar" fork="true">
+                <jvmarg value="-Dcatalina.home=C:\Programme\Apache Software Foundation\Tomcat 6.0"/>
+                <arg line="stop"/>
+            </java>
+        </target>
+        
+        <target name="deploy" depends="tomcat-stop, rebuild-all, undeploy-all, deploy-all, tomcat-start" />
 </project>
